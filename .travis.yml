@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t hedgehocrow/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run hedgehocrow/react-test npm test -- --coverage
+  
+after_success:
+  - docker build -t hedgehocrow/multi-client ./client
+  - docker build -t hedgehocrow/multi-nginx ./nginx
+  - docker build -t hedgehocrow/multi-server ./server
+  - docker build -t hedgehocrow/multi-worker ./worker
